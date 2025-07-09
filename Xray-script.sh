@@ -319,7 +319,7 @@ function install_update_xray() {
   _info "正在安装或更新 Xray"
   _error_detect 'bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root --beta'
   jq --arg ver "$(xray version | head -n 1 | cut -d \( -f 1 | grep -Eoi '[0-9.]*')" '.xray.version = $ver' /usr/local/etc/xray-script/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray-script/config.json
-  wget -O /usr/local/etc/xray-script/update-dat.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/update-dat.sh
+  wget -O /usr/local/etc/xray-script/update-dat.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/update-dat.sh
   chmod a+x /usr/local/etc/xray-script/update-dat.sh
   crontab -l | {
     cat
@@ -343,7 +343,7 @@ function purge_xray() {
 
 function service_xray() {
   _info "正在配置 xray.service"
-  wget -O ${HOME}/xray.service https://raw.githubusercontent.com/zxcvos/Xray-script/main/service/xray.service
+  wget -O ${HOME}/xray.service https://raw.githubusercontent.com/xxnuo/Xray-script/main/service/xray.service
   mv -f ${HOME}/xray.service /etc/systemd/system/xray.service
   _systemctl dr
 }
@@ -494,15 +494,15 @@ function menu() {
     _error "未使用 Xray-script 进行安装"
   fi
   if [ -d /usr/local/etc/xray-script ] && ([ ${idx} -gt 102 ] || [ ${idx} -lt 111 ]); then
-    wget -qO ${xray_config_manage} https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/xray_config_manage.sh
+    wget -qO ${xray_config_manage} https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/xray_config_manage.sh
     chmod a+x ${xray_config_manage}
   fi
   case "${idx}" in
   1)
     if [ ! -d /usr/local/etc/xray-script ]; then
       mkdir -p /usr/local/etc/xray-script
-      wget -O /usr/local/etc/xray-script/config.json https://raw.githubusercontent.com/zxcvos/Xray-script/main/config/config.json
-      wget -O ${xray_config_manage} https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/xray_config_manage.sh
+      wget -O /usr/local/etc/xray-script/config.json https://raw.githubusercontent.com/xxnuo/Xray-script/main/config/config.json
+      wget -O ${xray_config_manage} https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/xray_config_manage.sh
       chmod a+x ${xray_config_manage}
       install_dependencies
       install_update_xray
@@ -555,7 +555,7 @@ function menu() {
     show_config
     ;;
   102)
-    [ -f /usr/local/etc/xray-script/traffic.sh ] || wget -O /usr/local/etc/xray-script/traffic.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/traffic.sh
+    [ -f /usr/local/etc/xray-script/traffic.sh ] || wget -O /usr/local/etc/xray-script/traffic.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/traffic.sh
     bash /usr/local/etc/xray-script/traffic.sh
     ;;
   103)
@@ -653,10 +653,10 @@ function menu() {
     fi
     ;;
   201)
-    bash <(wget -qO- https://raw.githubusercontent.com/zxcvos/system-automation-scripts/main/update-kernel.sh)
+    bash <(wget -qO- https://raw.githubusercontent.com/xxnuo/system-automation-scripts/main/update-kernel.sh)
     ;;
   202)
-    bash <(wget -qO- https://raw.githubusercontent.com/zxcvos/system-automation-scripts/main/remove-kernel.sh)
+    bash <(wget -qO- https://raw.githubusercontent.com/xxnuo/system-automation-scripts/main/remove-kernel.sh)
     ;;
   203)
     local ssh_port=$(sed -En "s/^[#pP].*ort\s*([0-9]*)$/\1/p" /etc/ssh/sshd_config)
@@ -671,7 +671,7 @@ function menu() {
     read -r -p "是否选择网络连接优化 [y/n] " is_opt
     if [[ ${is_opt} =~ ^[Yy]$ ]]; then
       [ -f /usr/local/etc/xray-script/sysctl.conf.bak ] || cp -af /etc/sysctl.conf /usr/local/etc/xray-script/sysctl.conf.bak
-      wget -O /etc/sysctl.conf https://raw.githubusercontent.com/zxcvos/Xray-script/main/config/sysctl.conf
+      wget -O /etc/sysctl.conf https://raw.githubusercontent.com/xxnuo/Xray-script/main/config/sysctl.conf
       sysctl -p
     fi
     ;;
