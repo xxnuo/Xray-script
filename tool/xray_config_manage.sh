@@ -494,7 +494,7 @@ if ! is_config_path "${configPath}"; then
 fi
 
 if [ ${isDownload} -eq 1 ]; then
-  wget -O "${configPath}" https://raw.githubusercontent.com/zxcvos/Xray-script/main/VLESS-XTLS-uTLS-REALITY/server.json
+  wget -O "${configPath}" https://raw.githubusercontent.com/xxnuo/Xray-script/main/VLESS-XTLS-uTLS-REALITY/server.json
 fi
 
 if [ ${isSetListen} -eq 1 ]; then

@@ -120,8 +120,8 @@ function build_warp() {
     print_info '正在构建 WARP 镜像'
     mkdir -p /usr/local/xray-script/warp
     mkdir -p ${HOME}/.warp
-    wget -O /usr/local/xray-script/warp/Dockerfile https://raw.githubusercontent.com/zxcvos/Xray-script/main/cloudflare-warp/Dockerfile || print_error "WARP Dockerfile 下载失败"
-    wget -O /usr/local/xray-script/warp/startup.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/cloudflare-warp/startup.sh || print_error "WARP startup.sh 下载失败"
+    wget -O /usr/local/xray-script/warp/Dockerfile https://raw.githubusercontent.com/xxnuo/Xray-script/main/cloudflare-warp/Dockerfile || print_error "WARP Dockerfile 下载失败"
+    wget -O /usr/local/xray-script/warp/startup.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/cloudflare-warp/startup.sh || print_error "WARP startup.sh 下载失败"
     docker build -t xray-script-warp /usr/local/xray-script/warp || print_error "WARP 镜像构建失败"
   fi
 }
@@ -168,7 +168,7 @@ function install_cloudreve() {
       mkdir -vp /usr/local/cloudreve/data/aria2 &&
       chmod -R 777 /usr/local/cloudreve/data/aria2
     print_info "下载管理 Cloudreve 的 docker-compose.yaml。"
-    wget -O /usr/local/cloudreve/docker-compose.yaml https://raw.githubusercontent.com/zxcvos/Xray-script/main/cloudreve/docker-compose.yaml
+    wget -O /usr/local/cloudreve/docker-compose.yaml https://raw.githubusercontent.com/xxnuo/Xray-script/main/cloudreve/docker-compose.yaml
     print_info "启动 Cloudreve 服务"
     cd /usr/local/cloudreve
     docker compose up -d

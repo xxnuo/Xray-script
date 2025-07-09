@@ -864,10 +864,10 @@ function config_nginx() {
   _info "en: Generating nginxconfig.io-example.com.tar.gz from the compressed and base64-encoded configuration string."
   echo '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' | base64 --decode | tee "${NGINX_CONFIG_PATH}/nginxconfig.io-example.com.tar.gz" >/dev/null
   tar -xzvf nginxconfig.io-example.com.tar.gz | xargs chmod 0644
-  _error_detect "curl -fsSL -o "${NGINX_CONFIG_PATH}/nginx.conf" "https://raw.githubusercontent.com/zxcvos/Xray-script/main/nginx/conf/nginx.conf""
-  _error_detect "curl -fsSL -o "${NGINX_CONFIG_PATH}/sites-available/example.com.conf" "https://raw.githubusercontent.com/zxcvos/Xray-script/main/nginx/conf/sites-available/example.com.conf""
-  _error_detect "curl -fsSL -o "${NGINX_CONFIG_PATH}/conf.d/restrict.conf" "https://raw.githubusercontent.com/zxcvos/Xray-script/main/nginx/conf/conf.d/restrict.conf""
-  _error_detect "curl -fsSL -o "${NGINX_CONFIG_PATH}/nginxconfig.io/limit.conf" "https://raw.githubusercontent.com/zxcvos/Xray-script/main/nginx/conf/nginxconfig.io/limit.conf""
+  _error_detect "curl -fsSL -o "${NGINX_CONFIG_PATH}/nginx.conf" "https://raw.githubusercontent.com/xxnuo/Xray-script/main/nginx/conf/nginx.conf""
+  _error_detect "curl -fsSL -o "${NGINX_CONFIG_PATH}/sites-available/example.com.conf" "https://raw.githubusercontent.com/xxnuo/Xray-script/main/nginx/conf/sites-available/example.com.conf""
+  _error_detect "curl -fsSL -o "${NGINX_CONFIG_PATH}/conf.d/restrict.conf" "https://raw.githubusercontent.com/xxnuo/Xray-script/main/nginx/conf/conf.d/restrict.conf""
+  _error_detect "curl -fsSL -o "${NGINX_CONFIG_PATH}/nginxconfig.io/limit.conf" "https://raw.githubusercontent.com/xxnuo/Xray-script/main/nginx/conf/nginxconfig.io/limit.conf""
   case "${choice_domain}" in
   1)
     sed -i "/^stream {/,/^http {/s|^|#|" "${NGINX_CONFIG_PATH}/nginx.conf"
@@ -1034,7 +1034,7 @@ function install_update_xray() {
   if [[ ! -f "${XRAY_SCRIPT_PATH}/update_dat.sh" ]]; then
     _info "zh: 下载 update_dat.sh"
     _info "en: Downloading update_dat.sh."
-    _error_detect "curl -fsSL -o ${XRAY_SCRIPT_PATH}/update_dat.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/update-dat.sh"
+    _error_detect "curl -fsSL -o ${XRAY_SCRIPT_PATH}/update_dat.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/update-dat.sh"
     chmod a+x ${XRAY_SCRIPT_PATH}/update_dat.sh
     _info "zh: 设置 geo 文件定时更新任务。"
     _info "en: Setting up crontab task for updating geo files."
@@ -1092,7 +1092,7 @@ EOF
 function config_xray() {
   _info "zh: 下载 Xray 的配置文件 config.json。"
   _info "en: Download the Xray configuration file config.json."
-  _error_detect 'curl -fsSL -o /usr/local/etc/xray/config.json https://raw.githubusercontent.com/zxcvos/Xray-script/main/VLESS-XTLS-uTLS-REALITY/myself.json'
+  _error_detect 'curl -fsSL -o /usr/local/etc/xray/config.json https://raw.githubusercontent.com/xxnuo/Xray-script/main/VLESS-XTLS-uTLS-REALITY/myself.json'
   # x25519
   _info "zh: 使用 xray x25519 生成配对的公私钥。"
   _info "en: Generate paired public and private keys using xray x25519."
@@ -1151,7 +1151,7 @@ function dest2target() {
 function install_xray_config_manage() {
   _info "zh: 下载 xray_config_manage.sh。"
   _info "en: Downloading xray_config_manage.sh."
-  _error_detect "curl -fsSL -o ${XRAY_CONFIG_MANAGE} https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/xray_config_manage.sh"
+  _error_detect "curl -fsSL -o ${XRAY_CONFIG_MANAGE} https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/xray_config_manage.sh"
   chmod a+x "${XRAY_CONFIG_MANAGE}"
 }
 
@@ -1184,7 +1184,7 @@ function install_cloudreve() {
     chmod -R 777 "${CLOUDREVE_PATH}/data/aria2"
   _info "zh: 下载管理 cloudreve 的 docker-compose.yaml。"
   _info "en: Downloading docker-compose.yaml for managing cloudreve."
-  _error_detect "curl -fsSL -o ${CLOUDREVE_PATH}/docker-compose.yaml https://raw.githubusercontent.com/zxcvos/Xray-script/main/cloudreve/docker-compose.yaml"
+  _error_detect "curl -fsSL -o ${CLOUDREVE_PATH}/docker-compose.yaml https://raw.githubusercontent.com/xxnuo/Xray-script/main/cloudreve/docker-compose.yaml"
   cd "${CLOUDREVE_PATH}"
   docker_compose_manage start
   _info "zh: 等待 cloudreve 启动。"
@@ -1200,7 +1200,7 @@ function install_cloudreve() {
   jq --arg password "${cloudreve_password}" '.cloudreve.password = $password' "${XRAY_SCRIPT_PATH}/config.json" >"${XRAY_SCRIPT_PATH}/tmp.json" && mv -f "${XRAY_SCRIPT_PATH}/tmp.json" "${XRAY_SCRIPT_PATH}/config.json"
   _info "zh: 下载 cloudreve_watchtower.sh。"
   _info "en: Downloading cloudreve_watchtower.sh."
-  _error_detect "curl -fsSL -o ${XRAY_SCRIPT_PATH}/cloudreve_watchtower.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/cloudreve/watchtower.sh"
+  _error_detect "curl -fsSL -o ${XRAY_SCRIPT_PATH}/cloudreve_watchtower.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/cloudreve/watchtower.sh"
   chmod a+x ${XRAY_SCRIPT_PATH}/cloudreve_watchtower.sh
   _info "zh: 设置 cloudreve 版本号定时记录任务。"
   _info "en: Setting up crontab task to record cloudreve version."
@@ -1233,8 +1233,8 @@ function install_cloudflare_warp() {
   mkdir -vp "${HOME}/.warp"
   _info "zh: 下载构建 cloudflare-warp 镜像的 Dockerfile 和 startup.sh。"
   _info "en: Downloading Dockerfile and startup.sh for building the cloudflare-warp image."
-  _error_detect "curl -fsSL -o ${CLOUDFLARE_WARP_PATH}/Dockerfile https://raw.githubusercontent.com/zxcvos/Xray-script/main/cloudflare-warp/Dockerfile"
-  _error_detect "curl -fsSL -o ${CLOUDFLARE_WARP_PATH}/startup.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/cloudflare-warp/startup.sh"
+  _error_detect "curl -fsSL -o ${CLOUDFLARE_WARP_PATH}/Dockerfile https://raw.githubusercontent.com/xxnuo/Xray-script/main/cloudflare-warp/Dockerfile"
+  _error_detect "curl -fsSL -o ${CLOUDFLARE_WARP_PATH}/startup.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/cloudflare-warp/startup.sh"
   cd "${CLOUDFLARE_WARP_PATH}"
   _info "zh: 构建自定义 cloudflare-warp 镜像。"
   _info "en: Building the custom cloudflare-warp image."
@@ -1295,7 +1295,7 @@ function install() {
     ;;
   esac
   # Script config
-  _error_detect "curl -fsSL -o ${XRAY_SCRIPT_PATH}/config.json https://raw.githubusercontent.com/zxcvos/Xray-script/main/config/myself.json"
+  _error_detect "curl -fsSL -o ${XRAY_SCRIPT_PATH}/config.json https://raw.githubusercontent.com/xxnuo/Xray-script/main/config/myself.json"
   # Firewall
   firewall_manage
   firewall_pass allow "$(sed -En "s/^[#pP].*ort\s*([0-9]*)$/\1/p" /etc/ssh/sshd_config)"
@@ -1543,12 +1543,12 @@ function reset_cloudreve_admin() {
 
 # 201.update kernel
 function update_kernel() {
-  bash <(wget -qO- https://raw.githubusercontent.com/zxcvos/system-automation-scripts/main/update-kernel.sh)
+  bash <(wget -qO- https://raw.githubusercontent.com/xxnuo/system-automation-scripts/main/update-kernel.sh)
 }
 
 # 202.remove kernel
 function remove_kernel() {
-  bash <(wget -qO- https://raw.githubusercontent.com/zxcvos/system-automation-scripts/main/remove-kernel.sh)
+  bash <(wget -qO- https://raw.githubusercontent.com/xxnuo/system-automation-scripts/main/remove-kernel.sh)
 }
 
 # 203.change ssh port
@@ -1594,7 +1594,7 @@ function optimize_kernel_parameters() {
     sed -i 's/^#\?RuntimeMaxUse=.*/RuntimeMaxUse=8M/' /etc/systemd/journald.conf
     systemctl restart systemd-journald
     # sysctl
-    _error_detect "curl -fsSL -o /etc/sysctl.d/99-sysctl.conf https://raw.githubusercontent.com/zxcvos/Xray-script/main/config/sysctl.conf"
+    _error_detect "curl -fsSL -o /etc/sysctl.d/99-sysctl.conf https://raw.githubusercontent.com/xxnuo/Xray-script/main/config/sysctl.conf"
     sysctl -p
   fi
 }
