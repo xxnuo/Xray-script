@@ -343,7 +343,7 @@ function check_xray_script_dependencies() {
 
 function check_xray_script_version() {
   [[ -d /usr/local/xray-script ]] || return
-  local url="https://api.github.com/repos/zxcvos/Xray-script/contents/xhttp.sh"
+  local url="https://api.github.com/repos/zxcvos/Xray-script/contents/Xray-script.sh"
   local local_size=$(stat -c %s "${CUR_DIR}/${CUR_FILE}")
   local remote_size=$(curl -fsSL "$url" | jq -r '.size')
 
@@ -364,10 +364,10 @@ function check_xray_script_version() {
       local tmp_script=$(mktemp)
 
       # 下载新脚本并检查是否成功
-      if ! wget --no-check-certificate -O "$tmp_script" "https://raw.githubusercontent.com/xxnuo/Xray-script/main/xhttp.sh"; then
+      if ! wget --no-check-certificate -O "$tmp_script" "https://raw.githubusercontent.com/xxnuo/Xray-script/main/Xray-script.sh"; then
         rm -rf "${tmp_script}"
         _warn "新脚本下载失败，请手动更新脚本"
-        _warn "echo 'wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/xhttp.sh && bash ${HOME}/Xray-script.sh'"
+        _warn "echo 'wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/Xray-script.sh && bash ${HOME}/Xray-script.sh'"
         exit 1
       fi
 
