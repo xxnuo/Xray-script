@@ -12,43 +12,35 @@
 # Docker cloudflare-warp: https://github.com/e7h4n/cloudflare-warp
 # Cloudflare Warp: https://github.com/haoel/haoel.github.io#943-docker-%E4%BB%A3%E7%90%86
 
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin:/snap/bin
-export PATH
-
-# color
 readonly RED='\033[1;31;31m'
 readonly GREEN='\033[1;31;32m'
 readonly YELLOW='\033[1;31;33m'
 readonly NC='\033[0m'
-
-# config manage
 readonly xray_config_manage='/usr/local/etc/xray-script/xray_config_manage.sh'
 
 declare domain
 declare domain_path
 declare new_port
 
-# status print
 function _info() {
   printf "${GREEN}[信息] ${NC}"
-  printf -- "%s" "$@"
+  printf -- "%s" "$1"
   printf "\n"
 }
 
 function _warn() {
   printf "${YELLOW}[警告] ${NC}"
-  printf -- "%s" "$@"
+  printf -- "%s" "$1"
   printf "\n"
 }
 
 function _error() {
   printf "${RED}[错误] ${NC}"
-  printf -- "%s" "$@"
+  printf -- "%s" "$1"
   printf "\n"
   exit 1
 }
 
-# tools
 function _exists() {
   local cmd="$1"
   if eval type type >/dev/null 2>&1; then
@@ -64,14 +56,14 @@ function _exists() {
 
 function _os() {
   local os=""
-  [[ -f "/etc/debian_version" ]] && source /etc/os-release && os="${ID}" && printf -- "%s" "${os}" && return
-  [[ -f "/etc/redhat-release" ]] && os="centos" && printf -- "%s" "${os}" && return
+  [ -f "/etc/debian_version" ] && source /etc/os-release && os="${ID}" && printf -- "%s" "${os}" && return
+  [ -f "/etc/redhat-release" ] && os="centos" && printf -- "%s" "${os}" && return
 }
 
 function _os_full() {
-  [[ -f /etc/redhat-release ]] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
-  [[ -f /etc/os-release ]] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
-  [[ -f /etc/lsb-release ]] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
+  [ -f /etc/redhat-release ] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
+  [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
+  [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
 }
 
 function _os_ver() {
@@ -83,7 +75,7 @@ function _error_detect() {
   local cmd="$1"
   _info "${cmd}"
   eval ${cmd}
-  if [[ $? -ne 0 ]]; then
+  if [ $? -ne 0 ]; then
     _error "Execution command (${cmd}) failed, please check it and try again."
   fi
 }
@@ -111,31 +103,25 @@ function _is_tlsv1_3_h2() {
   fi
 }
 
-function _install() {
-  local packages_name="$@"
+function _install_update() {
+  local package_name="$@"
   case "$(_os)" in
   centos)
-    if _exists "dnf"; then
-      dnf update -y
-      dnf install -y dnf-plugins-core
-      dnf update -y
-      for package_name in ${packages_name}; do
-        dnf install -y ${package_name}
-      done
-    else
+    if _exists "yum"; then
       yum update -y
-      yum install -y epel-release yum-utils
+      _error_detect "yum install -y epel-release yum-utils"
       yum update -y
-      for package_name in ${packages_name}; do
-        yum install -y ${package_name}
-      done
+      _error_detect "yum install -y ${package_name}"
+    elif _exists "dnf"; then
+      dnf update -y
+      _error_detect "dnf install -y dnf-plugins-core"
+      dnf update -y
+      _error_detect "dnf install -y ${package_name}"
     fi
     ;;
   ubuntu | debian)
     apt update -y
-    for package_name in ${packages_name}; do
-      apt install -y ${package_name}
-    done
+    _error_detect "apt install -y ${package_name}"
     ;;
   esac
 }
@@ -191,7 +177,7 @@ function select_data() {
   local data_list=($(awk -v FS=',' '{for (i=1; i<=NF; i++) arr[i]=$i} END{for (i in arr) print arr[i]}' <<<"${1}"))
   local index_list=($(awk -v FS=',' '{for (i=1; i<=NF; i++) arr[i]=$i} END{for (i in arr) print arr[i]}' <<<"${2}"))
   local result_list=()
-  if [[ ${#index_list[@]} -ne 0 ]]; then
+  if [ ${#index_list[@]} -ne 0 ]; then
     for i in "${index_list[@]}"; do
       if _is_digit "${i}" && [ ${i} -ge 1 ] && [ ${i} -le ${#data_list[@]} ]; then
         i=$((i - 1))
@@ -201,7 +187,7 @@ function select_data() {
   else
     result_list=("${data_list[@]}")
   fi
-  if [[ ${#result_list[@]} -eq 0 ]]; then
+  if [ ${#result_list[@]} -eq 0 ]; then
     result_list=("${data_list[@]}")
   fi
   echo "${result_list[@]}"
@@ -255,11 +241,11 @@ function select_dest() {
     echo -e "-------------------------------------------"
   done
   _info "正在修改配置"
-  [[ "${domain_path}" != "" ]] && pick_dest="${pick_dest}${domain_path}"
+  [ "${domain_path}" != "" ] && pick_dest="${pick_dest}${domain_path}"
   if echo ${pick_dest} | grep -q '/$'; then
     pick_dest=$(echo ${pick_dest} | sed -En 's|/+$||p')
   fi
-  [[ "${sns}" != "" ]] && jq --argjson sn "{\"${pick_dest}\": ${sns}}" '.xray.serverNames += $sn' /usr/local/etc/xray-script/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray-script/config.json
+  [ "${sns}" != "" ] && jq --argjson sn "{\"${pick_dest}\": ${sns}}" '.xray.serverNames += $sn' /usr/local/etc/xray-script/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray-script/config.json
   jq --arg dest "${pick_dest}" '.xray.dest = $dest' /usr/local/etc/xray-script/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray-script/config.json
 }
 
@@ -298,18 +284,17 @@ function read_uuid() {
   read -p "请输入自定义 UUID, 默认则自动生成: " in_uuid
 }
 
-# check os
 function check_os() {
-  [[ -z "$(_os)" ]] && _error "Not supported OS"
+  [ -z "$(_os)" ] && _error "Not supported OS"
   case "$(_os)" in
   ubuntu)
-    [[ -n "$(_os_ver)" && "$(_os_ver)" -lt 16 ]]  && _error "Not supported OS, please change to Ubuntu 16+ and try again."
+    [ -n "$(_os_ver)" -a "$(_os_ver)" -lt 16 ] && _error "Not supported OS, please change to Ubuntu 16+ and try again."
     ;;
   debian)
-    [[ -n "$(_os_ver)" && "$(_os_ver)" -lt 9 ]] && _error "Not supported OS, please change to Debian 9+ and try again."
+    [ -n "$(_os_ver)" -a "$(_os_ver)" -lt 9 ] && _error "Not supported OS, please change to Debian 9+ and try again."
     ;;
   centos)
-    [[ -n "$(_os_ver)" && "$(_os_ver)" -lt 7 ]] && _error "Not supported OS, please change to CentOS 7+ and try again."
+    [ -n "$(_os_ver)" -a "$(_os_ver)" -lt 7 ] && _error "Not supported OS, please change to CentOS 7+ and try again."
     ;;
   *)
     _error "Not supported OS"
@@ -319,13 +304,13 @@ function check_os() {
 
 function install_dependencies() {
   _info "正在下载相关依赖"
-  _install "ca-certificates openssl curl wget jq tzdata"
+  _install_update "ca-certificates openssl lsb-release curl wget jq tzdata"
   case "$(_os)" in
   centos)
-    _install "crontabs util-linux iproute procps-ng"
+    _install_update "crontabs util-linux iproute procps-ng"
     ;;
   debian | ubuntu)
-    _install "cron bsdmainutils iproute2 procps"
+    _install_update "cron bsdmainutils iproute2 procps"
     ;;
   esac
 }
@@ -336,7 +321,10 @@ function install_update_xray() {
   jq --arg ver "$(xray version | head -n 1 | cut -d \( -f 1 | grep -Eoi '[0-9.]*')" '.xray.version = $ver' /usr/local/etc/xray-script/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray-script/config.json
   wget -O /usr/local/etc/xray-script/update-dat.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/update-dat.sh
   chmod a+x /usr/local/etc/xray-script/update-dat.sh
-  (crontab -l 2>/dev/null; echo "30 22 * * * /usr/local/etc/xray-script/update-dat.sh >/dev/null 2>&1") | awk '!x[$0]++' | crontab -
+  crontab -l | {
+    cat
+    echo "30 22 * * * /usr/local/etc/xray-script/update-dat.sh >/dev/null 2>&1"
+  } | uniq | crontab -
   /usr/local/etc/xray-script/update-dat.sh
 }
 
@@ -380,24 +368,6 @@ function config_xray() {
   _systemctl "restart" "xray"
 }
 
-function tcp2raw() {
-  local current_xray_version=$(xray version | awk '$1=="Xray" {print $2}')
-  local tcp2raw_xray_version='24.9.30'
-  if _version_ge "${current_xray_version}" "${tcp2raw_xray_version}"; then
-    sed -i 's/"network": "tcp"/"network": "raw"/' /usr/local/etc/xray/config.json
-    _systemctl "restart" "xray"
-  fi
-}
-
-function dest2target() {
-  local current_xray_version=$(xray version | awk '$1=="Xray" {print $2}')
-  local dest2target_xray_version='24.10.31'
-  if _version_ge "${current_xray_version}" "${dest2target_xray_version}"; then
-    sed -i 's/"dest"/"target"/' /usr/local/etc/xray/config.json
-    _systemctl "restart" "xray"
-  fi
-}
-
 function show_config() {
   local IPv4=$(wget -qO- -t1 -T2 ipv4.icanhazip.com)
   local xs_inbound=$(jq '.inbounds[] | select(.tag == "xray-script-xtls-reality")' /usr/local/etc/xray/config.json)
@@ -408,7 +378,7 @@ function show_config() {
   local xs_serverNames=$(echo ${xs_inbound} | jq '.streamSettings.realitySettings.serverNames[]' | tr '\n' ',')
   local xs_shortIds=$(echo ${xs_inbound} | jq '.streamSettings.realitySettings.shortIds[]' | tr '\n' ',')
   local xs_spiderX=$(jq '.xray.dest' /usr/local/etc/xray-script/config.json)
-  [[ "${xs_spiderX}" == "${xs_spiderX##*/}" ]] && xs_spiderX='"/"' || xs_spiderX="\"/${xs_spiderX#*/}"
+  [ "${xs_spiderX}" == "${xs_spiderX##*/}" ] && xs_spiderX='"/"' || xs_spiderX="\"/${xs_spiderX#*/}"
   echo -e "-------------- client config --------------"
   echo -e "address     : \"${IPv4}\""
   echo -e "port        : ${xs_port}"
@@ -473,7 +443,7 @@ function show_share_link() {
       sl_sni="sni=${sl_serverName}"
       echo -e "---------- serverName ${sl_sni} ----------"
       for sl_shortId in "${sl_shortIds[@]}"; do
-        [[ "${sl_shortId//\"/}" != "" ]] && sl_shortId="sid=${sl_shortId//\"/}" || sl_shortId=""
+        [ "${sl_shortId//\"/}" != "" ] && sl_shortId="sid=${sl_shortId//\"/}" || sl_shortId=""
         sl="${sl_protocol}://${sl_uuid}@${sl_host}:${sl_port}?${sl_security}&${sl_flow}&${sl_fingerprint}&${sl_publicKey}&${sl_sni}&${sl_spiderX}&${sl_shortId}"
         echo "${sl%&}#${sl_descriptive_text}"
       done
@@ -529,7 +499,7 @@ function menu() {
   fi
   case "${idx}" in
   1)
-    if [[ ! -d /usr/local/etc/xray-script ]]; then
+    if [ ! -d /usr/local/etc/xray-script ]; then
       mkdir -p /usr/local/etc/xray-script
       wget -O /usr/local/etc/xray-script/config.json https://raw.githubusercontent.com/xxnuo/Xray-script/main/config/config.json
       wget -O ${xray_config_manage} https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/xray_config_manage.sh
@@ -541,8 +511,6 @@ function menu() {
       read_uuid
       select_dest
       config_xray
-      tcp2raw
-      dest2target
       show_config
     fi
     ;;
@@ -550,18 +518,16 @@ function menu() {
     _info "判断 Xray 是否用新版本"
     local current_xray_version="$(jq -r '.xray.version' /usr/local/etc/xray-script/config.json)"
     local latest_xray_version="$(wget -qO- --no-check-certificate https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[0].tag_name ' | cut -d v -f 2)"
-    if _version_ge "${latest_xray_version}" "${current_xray_version}"; then
+    if [ "${latest_xray_version}" != "${current_xray_version}" ] && _version_ge "${latest_xray_version}" "${current_xray_version}"; then
       _info "检测到有新版可用"
       install_update_xray
-      tcp2raw
-      dest2target
     else
       _info "当前已是最新版本: ${current_xray_version}"
     fi
     ;;
   3)
     purge_xray
-    [[ -f /usr/local/etc/xray-script/sysctl.conf.bak ]] && mv -f /usr/local/etc/xray-script/sysctl.conf.bak /etc/sysctl.conf && _info "已还原网络连接设置"
+    [ -f /usr/local/etc/xray-script/sysctl.conf.bak ] && mv -f /usr/local/etc/xray-script/sysctl.conf.bak /etc/sysctl.conf && _info "已还原网络连接设置"
     rm -rf /usr/local/etc/xray-script
     if docker ps | grep -q cloudflare-warp; then
       _info '正在停止 cloudflare-warp'
@@ -589,30 +555,23 @@ function menu() {
     show_config
     ;;
   102)
-    [[ -f /usr/local/etc/xray-script/traffic.sh ]] || wget -O /usr/local/etc/xray-script/traffic.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/traffic.sh
+    [ -f /usr/local/etc/xray-script/traffic.sh ] || wget -O /usr/local/etc/xray-script/traffic.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/traffic.sh
     bash /usr/local/etc/xray-script/traffic.sh
     ;;
   103)
     read_uuid
     _info "正在修改用户 id"
-    "${xray_config_manage}" -u ${in_uuid}
+    "${xray_config_manage}" -u "${in_uuid}"
     _info "已成功修改用户 id"
     _systemctl "restart" "xray"
     show_config
     ;;
   104)
-    _info "正在修改 dest(target) 与 serverNames"
+    _info "正在修改 dest 与 serverNames"
     select_dest
-    local current_xray_version=$(xray version | awk '$1=="Xray" {print $2}')
-    local dest2target_xray_version='24.10.31'
-    if _version_ge "${current_xray_version}" "${dest2target_xray_version}"; then
-      "${xray_config_manage}" -d "$(jq -r '.xray.target' /usr/local/etc/xray-script/config.json | grep -Eoi '([a-zA-Z0-9](\-?[a-zA-Z0-9])*\.)+[a-zA-Z]{2,}')"
-      "${xray_config_manage}" -sn "$(jq -c -r '.xray | .serverNames[.target] | .[]' /usr/local/etc/xray-script/config.json | tr '\n' ',')"
-    else
-      "${xray_config_manage}" -d "$(jq -r '.xray.dest' /usr/local/etc/xray-script/config.json | grep -Eoi '([a-zA-Z0-9](\-?[a-zA-Z0-9])*\.)+[a-zA-Z]{2,}')"
-      "${xray_config_manage}" -sn "$(jq -c -r '.xray | .serverNames[.dest] | .[]' /usr/local/etc/xray-script/config.json | tr '\n' ',')"
-    fi
-    _info "已成功修改 dest(target) 与 serverNames"
+    "${xray_config_manage}" -d "$(jq -r '.xray.dest' /usr/local/etc/xray-script/config.json | grep -Eoi '([a-zA-Z0-9](\-?[a-zA-Z0-9])*\.)+[a-zA-Z]{2,}')"
+    "${xray_config_manage}" -sn "$(jq -c -r '.xray | .serverNames[.dest] | .[]' /usr/local/etc/xray-script/config.json | tr '\n' ',')"
+    _info "已成功修改 dest 与 serverNames"
     _systemctl "restart" "xray"
     show_config
     ;;
@@ -672,12 +631,7 @@ function menu() {
     if ! _exists "docker"; then
       read -r -p "脚本使用 Docker 进行 WARP 管理，是否安装 Docker [y/n] " is_docker
       if [[ ${is_docker} =~ ^[Yy]$ ]]; then
-        curl -fsSL -o /usr/local/etc/xray-script/install-docker.sh https://get.docker.com
-        if [[ "$(_os)" == "centos" && "$(_os_ver)" -eq 8 ]]; then
-          sed -i 's|$sh_c "$pkg_manager install -y -q $pkgs"| $sh_c "$pkg_manager install -y -q $pkgs --allowerasing"|' /usr/local/etc/xray-script/install-docker.sh
-        fi
-        sh /usr/local/etc/xray-script/install-docker.sh --dry-run
-        sh /usr/local/etc/xray-script/install-docker.sh
+        curl -fsSL https://get.docker.com | sh
       else
         _warn "取消分流操作"
         exit 0
@@ -716,7 +670,7 @@ function menu() {
   204)
     read -r -p "是否选择网络连接优化 [y/n] " is_opt
     if [[ ${is_opt} =~ ^[Yy]$ ]]; then
-      [[ -f /usr/local/etc/xray-script/sysctl.conf.bak ]] || cp -af /etc/sysctl.conf /usr/local/etc/xray-script/sysctl.conf.bak
+      [ -f /usr/local/etc/xray-script/sysctl.conf.bak ] || cp -af /etc/sysctl.conf /usr/local/etc/xray-script/sysctl.conf.bak
       wget -O /etc/sysctl.conf https://raw.githubusercontent.com/xxnuo/Xray-script/main/config/sysctl.conf
       sysctl -p
     fi

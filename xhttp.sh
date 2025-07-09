@@ -325,7 +325,7 @@ function check_xray_script_dependencies() {
     # 比较文件大小
     if [[ "$remote_size" != "$local_size" ]]; then
       _info "发现脚本依赖 ${filename} 有更新"
-      if wget -q --show-progress -O "$tmp_file" "https://raw.githubusercontent.com/zxcvos/Xray-script/main/${filename}"; then
+      if wget -q --show-progress -O "$tmp_file" "https://raw.githubusercontent.com/xxnuo/Xray-script/main/${filename}"; then
         mv "$tmp_file" "$local_file"
         updated=true
       else
@@ -364,10 +364,10 @@ function check_xray_script_version() {
       local tmp_script=$(mktemp)
 
       # 下载新脚本并检查是否成功
-      if ! wget --no-check-certificate -O "$tmp_script" "https://raw.githubusercontent.com/zxcvos/Xray-script/main/xhttp.sh"; then
+      if ! wget --no-check-certificate -O "$tmp_script" "https://raw.githubusercontent.com/xxnuo/Xray-script/main/xhttp.sh"; then
         rm -rf "${tmp_script}"
         _warn "新脚本下载失败，请手动更新脚本"
-        _warn "echo 'wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/xhttp.sh && bash ${HOME}/Xray-script.sh'"
+        _warn "echo 'wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/xhttp.sh && bash ${HOME}/Xray-script.sh'"
         exit 1
       fi
 
@@ -588,7 +588,7 @@ function reset_cloudreve_data() {
 
 function enable_cron() {
   if ! [[ -f /usr/local/xray-script/update-dat.sh ]]; then
-    wget --no-check-certificate -O /usr/local/xray-script/update-dat.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/update-dat.sh
+    wget --no-check-certificate -O /usr/local/xray-script/update-dat.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/update-dat.sh
     chmod a+x /usr/local/xray-script/update-dat.sh
     (
       crontab -l 2>/dev/null
@@ -1528,16 +1528,16 @@ function stop_renew_ssl() {
 function setup_ssl() {
   stop_renew_ssl
   # 设置新域名对应的 nginx 配置文件
-  wget --no-check-certificate -O /usr/local/nginx/conf/modules-enabled/stream.conf https://raw.githubusercontent.com/zxcvos/Xray-script/main/nginx/conf/modules-enabled/stream.conf
+  wget --no-check-certificate -O /usr/local/nginx/conf/modules-enabled/stream.conf https://raw.githubusercontent.com/xxnuo/Xray-script/main/nginx/conf/modules-enabled/stream.conf
   sed -i "s| example.com| ${reality_domain}|g" /usr/local/nginx/conf/modules-enabled/stream.conf
   sed -i "s|# cdn.example.com|# ${cdn_domain}|g" /usr/local/nginx/conf/modules-enabled/stream.conf
 
-  wget --no-check-certificate -O /usr/local/nginx/conf/sites-available/${reality_domain}.conf https://raw.githubusercontent.com/zxcvos/Xray-script/main/nginx/conf/sites-available/example.com.conf
+  wget --no-check-certificate -O /usr/local/nginx/conf/sites-available/${reality_domain}.conf https://raw.githubusercontent.com/xxnuo/Xray-script/main/nginx/conf/sites-available/example.com.conf
   sed -i "s|example.com|${reality_domain}|g" /usr/local/nginx/conf/sites-available/${reality_domain}.conf
   sed -i "s|/yourpath|${XHTTP_PATH}|g" /usr/local/nginx/conf/sites-available/${reality_domain}.conf
 
   [[ ${reality_domain} == ${cdn_domain} ]] || {
-    wget --no-check-certificate -O /usr/local/nginx/conf/sites-available/${cdn_domain}.conf https://raw.githubusercontent.com/zxcvos/Xray-script/main/nginx/conf/sites-available/example.com.conf
+    wget --no-check-certificate -O /usr/local/nginx/conf/sites-available/${cdn_domain}.conf https://raw.githubusercontent.com/xxnuo/Xray-script/main/nginx/conf/sites-available/example.com.conf
     sed -i '/# h3/,/# h2/{/# h2/!d;}' /usr/local/nginx/conf/sites-available/${cdn_domain}.conf
     sed -i 's|cloudreve.sock|cdn_xhttp.sock|' /usr/local/nginx/conf/sites-available/${cdn_domain}.conf
     sed -i "s|example.com|${cdn_domain}|g" /usr/local/nginx/conf/sites-available/${cdn_domain}.conf
@@ -1659,7 +1659,7 @@ function view_xray_config() {
 }
 
 function view_xray_traffic() {
-  [[ -f /usr/local/xray-script/traffic.sh ]] || wget --no-check-certificate -O /usr/local/xray-script/traffic.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/traffic.sh
+  [[ -f /usr/local/xray-script/traffic.sh ]] || wget --no-check-certificate -O /usr/local/xray-script/traffic.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/tool/traffic.sh
   bash /usr/local/xray-script/traffic.sh
 }
 
@@ -1773,11 +1773,11 @@ function main_processes() {
 
   if ! [[ -d /usr/local/xray-script ]]; then
     mkdir -p /usr/local/xray-script
-    wget --no-check-certificate -O /usr/local/xray-script/nginx.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/nginx.sh
-    wget --no-check-certificate -O /usr/local/xray-script/ssl.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/ssl.sh
-    wget --no-check-certificate -q -O /usr/local/xray-script/docker.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/docker.sh
-    wget --no-check-certificate -q -O /usr/local/xray-script/config.json https://raw.githubusercontent.com/zxcvos/Xray-script/refs/heads/main/XTLS/config.json
-    wget --no-check-certificate -q -O /usr/local/xray-script/serverNames.json https://raw.githubusercontent.com/zxcvos/Xray-script/refs/heads/main/XTLS/serverNames.json
+    wget --no-check-certificate -O /usr/local/xray-script/nginx.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/nginx.sh
+    wget --no-check-certificate -O /usr/local/xray-script/ssl.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/ssl.sh
+    wget --no-check-certificate -q -O /usr/local/xray-script/docker.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/docker.sh
+    wget --no-check-certificate -q -O /usr/local/xray-script/config.json https://raw.githubusercontent.com/xxnuo/Xray-script/refs/heads/main/XTLS/config.json
+    wget --no-check-certificate -q -O /usr/local/xray-script/serverNames.json https://raw.githubusercontent.com/xxnuo/Xray-script/refs/heads/main/XTLS/serverNames.json
   fi
   STATUS=$(jq -r '.status' /usr/local/xray-script/config.json)
   WARP=$(jq -r '.warp' /usr/local/xray-script/config.json)

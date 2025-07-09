@@ -83,13 +83,13 @@ The drawback is that compilation takes a long time.
 * wget
 
   ```sh
-  wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/myself.sh
+  wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/myself.sh
   ```
 
 * curl
 
   ```sh
-  curl -fsSL -o ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/myself.sh
+  curl -fsSL -o ${HOME}/Xray-script.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/myself.sh
   ```
 
 ### 2. Execute the Script

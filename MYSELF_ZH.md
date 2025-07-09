@@ -84,13 +84,13 @@ sed -i 's/install_docker$/# install_docker/' ${HOME}/Xray-script.sh
 * wget
 
   ```sh
-  wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/myself.sh
+  wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/myself.sh
   ```
 
 * curl
 
   ```sh
-  curl -fsSL -o ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/myself.sh
+  curl -fsSL -o ${HOME}/Xray-script.sh https://raw.githubusercontent.com/xxnuo/Xray-script/main/myself.sh
   ```
 
 ### 2.执行脚本
